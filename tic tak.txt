@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tic Tac Toe</title>
+  <style>
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 5px;
+      width: 300px;
+    }
+  
+    .cell {
+      width: 100px;
+      height: 100px;
+      border: 1px solid black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 40px;
+      cursor: pointer;
+    }
+  
+    .message {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tic Tac Toe</h1>
+  <div class="board"></div>
+  <div class="message"></div>
+
+  <script>
+    // Tic Tac Toe Game Logic
+    const board = ['', '', '', '', '', '', '', '', ''];
+    const winningCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+    let currentPlayer = 'X';
+    let gameEnded = false;
+
+    const cells = document.querySelectorAll('.cell');
+    const message = document.querySelector('.message');
+
+    cells.forEach((cell, index) => {
+      cell.addEventListener('click', () => {
+        if (!gameEnded && board[index] === '') {
+          board[index] = currentPlayer;
+          cell.textContent = currentPlayer;
+          cell.style.color = currentPlayer === 'X' ? 'blue' : 'red';
+          if (checkWin()) {
+            message.textContent = `Player ${currentPlayer} wins!`;
+            gameEnded = true;
+          } else if (checkDraw()) {
+            message.textContent = "It's a draw!";
+            gameEnded = true;
+          } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            message.textContent = `Player ${currentPlayer}'s turn`;
+          }
+        }
+      });
+    });
+
+    function checkWin() {
+      for (let combination of winningCombinations) {
+        const [a, b, c] = combination;
+        if (board[a] === board[b] && board[a] === board[c] && board[a] !== '') {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function checkDraw() {
+      return board.every(cell => cell !== '');
+    }
+  </script>
+</body>
+</html>
